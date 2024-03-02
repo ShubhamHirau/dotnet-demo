@@ -51,7 +51,9 @@ jobs:
       run: dotnet publish -c Release -o ${{env.DOTNET_ROOT}}/publish
 
     - name: zip publish
-      run: zip -jr ${{env.DOTNET_ROOT}}/publish.zip ${{env.DOTNET_ROOT}}/publish/
+      run: |
+        zip --help
+        zip -j -r ${{env.DOTNET_ROOT}}/publish.zip ${{env.DOTNET_ROOT}}/publish/
 
     - name: Configure AWS credentials from Test account
       uses: aws-actions/configure-aws-credentials@v4
