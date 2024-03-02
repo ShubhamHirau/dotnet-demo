@@ -10,6 +10,8 @@ env:
   AWS_REGION: "ap-south-1"
   DOTNET_VERSION: '6.0.x'
   BUCKET_NAME: "uat-mindeedapp-deploy-bucket"
+  APP_NAME: "UATMindeedGithub"
+  DPG_NAME: "UATMindeedGithub-DG"
 
 jobs:
   build:
@@ -56,10 +58,7 @@ jobs:
         aws-region: ${{ env.AWS_REGION }}
 
     - name: Upload to S3
-      run: |
-        aws s3 cp ./publish.zip s3://${{ env.BUCKET_NAME }}/publish/
-        aws s3 ls s3://${{ env.BUCKET_NAME }}/publish/
+      run: aws s3 cp ./publish.zip s3://${{ env.BUCKET_NAME }}/publish/
 
-    # - name: Deploy to EC2 instance
-    #   run: |
-    #     aws deploy create-deployment --application-name {application-name} --deployment-config-name CodeDeployDefault.AllAtOnce --deployment-group-name {deployment-group-name} --s3-location bucket={bucket-name},key={folder-name}/publish.zip,bundleType=zip
+    - name: Deploy to EC2 instance
+      run: aws deploy create-deployment --application-name ${{ env.APP_NAME }} --deployment-group-name ${{ env.DPG_NAME }} --deployment-config-name CodeDeployDefault.AllAtOnce --s3-location bucket=${{ env.BUCKET_NAME }},key=publish/publish.zip,bundleType=zip
