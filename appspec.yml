@@ -22,7 +22,7 @@ permissions:
       - directory
 hooks:
   BeforeInstall:
-    - location: scripts/test.sh
+    - location: scripts/test1.sh
       timeout: 10
       runas: ssm-user
       # runas: version v2
