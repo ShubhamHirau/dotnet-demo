@@ -1,0 +1,28 @@
+---
+version: 0.0
+os: linux
+files:
+  - source: /
+    destination: /home/ssm-user/public_html
+file_exists_behavior: OVERWRITE
+permissions:
+  - object: /home/ssm-user/public_html
+    pattern: "**"
+    owner: ssm-user
+    group: ssm-user
+    mode: 644
+    type:
+      - file
+  - object: /home/ssm-user/public_html
+    pattern: "**"
+    owner: ssm-user
+    group: ssm-user
+    mode: 755
+    type:
+      - directory
+hooks:
+  BeforeInstall:
+    - location: scripts/test.sh
+      timeout: 10
+      runas: ssm-user
+...
