@@ -14,6 +14,7 @@ on:
 env:
   AWS_REGION: "ap-south-1"
   DOTNET_VERSION: '6.0.x'
+  BUCKET_NAME: "uat-mindeedapp-deploy-bucket"
 
 jobs:
   build:
@@ -43,21 +44,22 @@ jobs:
       run: dotnet build --configuration Release
 
     - name: dotnet publish
-      run: dotnet publish -c Release -o ${{env.DOTNET_ROOT}}/myapp
+      run: dotnet publish -c Release -o ${{env.DOTNET_ROOT}}/publish
 
     - name: zip publish
-      run: Compress-Archive -Path ${{env.DOTNET_ROOT}}/publish -DestinationPath ${{env.DOTNET_ROOT}}/publish/publish.zip
+      run: zip -r ${{env.DOTNET_ROOT}}/publish/publish.zip ${{env.DOTNET_ROOT}}/publish
+      # run: Compress-Archive -Path ${{env.DOTNET_ROOT}}/publish -DestinationPath ${{env.DOTNET_ROOT}}/publish/publish.zip
 
     - name: Configure AWS credentials from Test account
       uses: aws-actions/configure-aws-credentials@v1
       with:
-        role-to-assume: arn:aws:iam::**********:role/Github
+        role-to-assume: arn:aws:iam::600275855853:role/GithubActionsRole
         role-session-name: Github
         aws-region: ${{ env.AWS_REGION }}
 
     - name: Upload to S3
       run: | 
-        aws s3 cp ${{env.DOTNET_ROOT}}/publish/publish.zip s3://{bucket-name}/{folder-name}/ --recursive
+        aws s3 cp ${{env.DOTNET_ROOT}}/publish/publish.zip s3://${{ env.BUCKET_NAME }}/publish/ --recursive
 
     # - name: Deploy to EC2 instance
     #   run: |
