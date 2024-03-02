@@ -25,5 +25,5 @@ hooks:
     - location: scripts/test.sh
       timeout: 10
       runas: ssm-user
-      # runas: version v4
+      # runas: version v5
 ...
