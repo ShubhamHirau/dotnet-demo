@@ -64,7 +64,7 @@ jobs:
       run: | 
         pwd
         ls -lh
-        ls -lh ${{env.DOTNET_ROOT}}/
+        ls -lh ${{env.DOTNET_ROOT}}/publish/
         ls -lh ${{env.DOTNET_ROOT}}/publish.zip
         aws sts get-caller-identity
         aws s3 cp ${{env.DOTNET_ROOT}}/publish.zip s3://${{ env.BUCKET_NAME }}/publish/
