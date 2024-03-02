@@ -19,7 +19,11 @@ env:
 jobs:
   build:
     runs-on: ubuntu-latest
-    
+
+    permissions:
+      id-token: write # This is required for requesting the JWT
+      contents: read # This is required for actions/checkout
+
     defaults:
       run:
         working-directory: 03-app-dotnet
@@ -48,7 +52,6 @@ jobs:
 
     - name: zip publish
       run: zip -r ${{env.DOTNET_ROOT}}/publish/publish.zip ${{env.DOTNET_ROOT}}/publish
-      # run: Compress-Archive -Path ${{env.DOTNET_ROOT}}/publish -DestinationPath ${{env.DOTNET_ROOT}}/publish/publish.zip
 
     - name: Configure AWS credentials from Test account
       uses: aws-actions/configure-aws-credentials@v1
