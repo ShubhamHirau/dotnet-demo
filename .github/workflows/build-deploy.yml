@@ -46,7 +46,7 @@ jobs:
       run: dotnet publish -c Release -o ./publish
 
     - name: zip publish
-      run: cd ./publish/ && zip -r ../publish.zip . && cd .. && zip -u publish.zip appspec.yml scripts
+      run: cd ./publish/ && zip -r ../publish.zip . && cd .. && zip -ur publish.zip appspec.yml scripts
 
     - name: Configure AWS credentials from Test account
       uses: aws-actions/configure-aws-credentials@v4
