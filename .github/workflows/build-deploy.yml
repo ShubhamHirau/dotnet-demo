@@ -65,6 +65,7 @@ jobs:
         pwd
         ls -lh
         tree
+        ls -lh ${{env.DOTNET_ROOT}}/
         # aws s3 cp ${{env.DOTNET_ROOT}}/publish.zip s3://${{ env.BUCKET_NAME }}/publish/ --recursive
 
     # - name: Deploy to EC2 instance
