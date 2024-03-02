@@ -67,9 +67,6 @@ jobs:
         ls -lh ${{env.DOTNET_ROOT}}/
         ls -lh ${{env.DOTNET_ROOT}}/publish.zip
         aws sts get-caller-identity
-        #aws s3 ls s3://${{ env.BUCKET_NAME }}/publish/
-        #aws s3 cp ${{env.DOTNET_ROOT}}/publish.zip s3://${{ env.BUCKET_NAME }}/publish/ --recursive
-        tree
 
     # - name: Deploy to EC2 instance
     #   run: |
