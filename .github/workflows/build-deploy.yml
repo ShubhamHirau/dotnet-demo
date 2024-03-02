@@ -1,0 +1,58 @@
+name: CI-CD Workflow
+
+on:
+  push:
+    branches:
+      - main
+
+env:
+  AWS_REGION: "ap-south-1"
+  DOTNET_VERSION: '6.0.x'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    defaults:
+      run:
+        working-directory: 03-app-dotnet
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Set up .NET Core
+      uses: actions/setup-dotnet@v2
+      with:
+        dotnet-version: ${{ env.DOTNET_VERSION }}
+    
+    - name: Set up dependency caching for faster builds
+      uses: actions/cache@v3
+      with:
+        path: ~/.nuget/packages
+        key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json') }}
+        restore-keys: |
+          ${{ runner.os }}-nuget-
+
+    - name: Build with dotnet
+      run: dotnet build --configuration Release
+
+    - name: dotnet publish
+      run: dotnet publish -c Release -o ${{env.DOTNET_ROOT}}/myapp
+
+    - name: zip publish
+      run: Compress-Archive -Path ${{env.DOTNET_ROOT}}/publish -DestinationPath ${{env.DOTNET_ROOT}}/publish/publish.zip
+
+    - name: Configure AWS credentials from Test account
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        role-to-assume: arn:aws:iam::**********:role/Github
+        role-session-name: Github
+        aws-region: ${{ env.AWS_REGION }}
+
+    - name: Upload to S3
+      run: | 
+        aws s3 cp ${{env.DOTNET_ROOT}}/publish/publish.zip s3://{bucket-name}/{folder-name}/ --recursive
+
+    # - name: Deploy to EC2 instance
+    #   run: |
+    #     aws deploy create-deployment --application-name {application-name} --deployment-config-name CodeDeployDefault.AllAtOnce --deployment-group-name {deployment-group-name} --s3-location bucket={bucket-name},key={folder-name}/publish.zip,bundleType=zip
