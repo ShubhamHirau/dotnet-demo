@@ -62,7 +62,10 @@ jobs:
 
     - name: Upload to S3
       run: | 
-        aws s3 cp ${{env.DOTNET_ROOT}}/publish.zip s3://${{ env.BUCKET_NAME }}/publish/ --recursive
+        pwd
+        ls -lh
+        tree
+        # aws s3 cp ${{env.DOTNET_ROOT}}/publish.zip s3://${{ env.BUCKET_NAME }}/publish/ --recursive
 
     # - name: Deploy to EC2 instance
     #   run: |
